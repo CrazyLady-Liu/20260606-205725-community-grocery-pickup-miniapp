@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鲜达社区 - 社区生鲜自提系统</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 50px;
+    }
+
+    .logo {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .title {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px 30px;
+      text-align: center;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-icon {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      margin-bottom: 24px;
+    }
+
+    .card.user .card-icon {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .card.merchant .card-icon {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .card.admin .card-icon {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+
+    .card-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 12px;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .card-features {
+      list-style: none;
+      text-align: left;
+      width: 100%;
+      margin-bottom: 24px;
+    }
+
+    .card-features li {
+      padding: 8px 0;
+      font-size: 13px;
+      color: #555;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-features li::before {
+      content: '✓';
+      color: #52c41a;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .card-btn {
+      display: inline-block;
+      padding: 12px 36px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .card-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .flow-section {
+      margin-top: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .flow-title {
+      text-align: center;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .flow-steps {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 30px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .flow-step .num {
+      width: 24px;
+      height: 24px;
+      background: #fff;
+      color: #764ba2;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .flow-arrow {
+      color: #fff;
+      font-size: 20px;
+      opacity: 0.6;
+    }
+
+    .tip-box {
+      margin-top: 30px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 20px;
+      color: #fff;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .tip-box h4 {
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .tip-box code {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 960px) {
+      .cards {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .title {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">🥬</div>
+      <h1 class="title">鲜达社区</h1>
+      <p class="subtitle">社区生鲜自提系统 · 三端联动原型演示</p>
+    </div>
+
+    <div class="cards">
+      <a href="user/index.html" class="card user" target="_blank">
+        <div class="card-icon">📱</div>
+        <h2 class="card-title">用户端小程序</h2>
+        <p class="card-desc">微信小程序风格，模拟用户下单全流程</p>
+        <ul class="card-features">
+          <li>商品浏览与搜索</li>
+          <li>商品详情与分类</li>
+          <li>购物车管理</li>
+          <li>预售/即时下单</li>
+          <li>支付与订单状态</li>
+          <li>提货码展示</li>
+          <li>订单复购功能</li>
+        </ul>
+        <span class="card-btn">进入用户端</span>
+      </a>
+
+      <a href="merchant/index.html" class="card merchant" target="_blank">
+        <div class="card-icon">🏪</div>
+        <h2 class="card-title">商家管理后台</h2>
+        <p class="card-desc">商家运营工作台，处理订单全流程</p>
+        <ul class="card-features">
+          <li>订单汇总概览</li>
+          <li>采购清单汇总</li>
+          <li>分拣打包操作</li>
+          <li>自提码核销</li>
+          <li>商品上下架管理</li>
+          <li>实时数据更新</li>
+        </ul>
+        <span class="card-btn">进入商家后台</span>
+      </a>
+
+      <a href="admin/index.html" class="card admin" target="_blank">
+        <div class="card-icon">📊</div>
+        <h2 class="card-title">数据统计后台</h2>
+        <p class="card-desc">数据看板，全方位监控运营指标</p>
+        <ul class="card-features">
+          <li>销量与销售额统计</li>
+          <li>锁单与履约分析</li>
+          <li>自提率统计</li>
+          <li>异常订单监控</li>
+          <li>商品销量排行</li>
+          <li>库存预警提示</li>
+        </ul>
+        <span class="card-btn">进入统计后台</span>
+      </a>
+    </div>
+
+    <div class="flow-section">
+      <h3 class="flow-title">🔄 核心业务流程</h3>
+      <div class="flow-steps">
+        <div class="flow-step"><span class="num">1</span> 用户下单</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><span class="num">2</span> 支付锁单</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><span class="num">3</span> 采购汇总</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><span class="num">4</span> 分拣打包</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><span class="num">5</span> 到店自提</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><span class="num">6</span> 核销完成</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <h4>💡 使用说明</h4>
+      <p>
+        1. 本系统为原型演示，三端数据通过浏览器 <code>localStorage</code> 共享，实现联动效果。<br>
+        2. 建议同时打开三个页面（用户端、商家后台、统计后台），体验数据实时同步。<br>
+        3. 用户端模拟微信小程序界面，商家后台和统计后台为 Web 管理系统风格。<br>
+        4. 异常场景演示：库存不足、支付失败（用户端有"模拟支付失败"按钮）、过期未提、重复核销、商品下架。<br>
+        5. 各端均有"重置数据"功能，可随时恢复初始模拟数据。
+      </p>
+    </div>
+  </div>
+</body>
+</html>

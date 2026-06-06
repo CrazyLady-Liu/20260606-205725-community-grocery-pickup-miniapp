@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>鲜达社区 - 用户端</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <span class="status-icons">
+        <span>📶</span>
+        <span>🔋</span>
+      </span>
+    </div>
+
+    <div class="app-content" id="appContent">
+      <div class="page page-home active" id="pageHome">
+        <div class="nav-bar">
+          <div class="nav-title">
+            <span class="logo">🥬</span>
+            <span>鲜达社区</span>
+          </div>
+          <div class="nav-location">
+            <span>📍</span>
+            <span id="userAddress">阳光花园</span>
+          </div>
+        </div>
+
+        <div class="search-bar">
+          <span>🔍</span>
+          <input type="text" placeholder="搜索新鲜好货" id="searchInput">
+        </div>
+
+        <div class="category-tabs">
+          <div class="tab active" data-category="all">全部</div>
+          <div class="tab" data-category="蔬菜">蔬菜</div>
+          <div class="tab" data-category="水果">水果</div>
+          <div class="tab" data-category="肉类">肉类</div>
+          <div class="tab" data-category="蛋禽">蛋禽</div>
+          <div class="tab" data-category="乳品">乳品</div>
+        </div>
+
+        <div class="banner">
+          <div class="banner-content">
+            <div class="banner-title">新人专享</div>
+            <div class="banner-sub">首单立减10元</div>
+          </div>
+          <div class="banner-icon">🎁</div>
+        </div>
+
+        <div class="section-title">
+          <span class="hot-icon">🔥</span>
+          <span>热销爆款</span>
+        </div>
+
+        <div class="product-list" id="productList">
+        </div>
+      </div>
+
+      <div class="page page-cart" id="pageCart">
+        <div class="nav-bar">
+          <div class="nav-title">购物车</div>
+        </div>
+        <div class="cart-content" id="cartContent">
+        </div>
+        <div class="cart-footer" id="cartFooter" style="display:none;">
+          <div class="cart-total">
+            <span>合计：</span>
+            <span class="total-price" id="cartTotal">¥0.00</span>
+          </div>
+          <button class="btn-checkout" onclick="goCheckout()">去结算(<span id="cartCount">0</span>)</button>
+        </div>
+      </div>
+
+      <div class="page page-orders" id="pageOrders">
+        <div class="nav-bar">
+          <div class="nav-title">我的订单</div>
+        </div>
+        <div class="order-tabs">
+          <div class="order-tab active" data-status="all">全部</div>
+          <div class="order-tab" data-status="pending_payment">待支付</div>
+          <div class="order-tab" data-status="packed">待自提</div>
+          <div class="order-tab" data-status="completed">已完成</div>
+        </div>
+        <div class="order-list" id="orderList">
+        </div>
+      </div>
+
+      <div class="page page-profile" id="pageProfile">
+        <div class="profile-header">
+          <div class="avatar">👤</div>
+          <div class="user-info">
+            <div class="user-name" id="profileName">张先生</div>
+            <div class="user-phone" id="profilePhone">138****8888</div>
+          </div>
+        </div>
+        <div class="profile-menu">
+          <div class="menu-item" onclick="showMyOrders()">
+            <span>📦</span>
+            <span>我的订单</span>
+            <span class="arrow">›</span>
+          </div>
+          <div class="menu-item">
+            <span>📍</span>
+            <span>自提地址</span>
+            <span class="arrow">›</span>
+          </div>
+          <div class="menu-item" onclick="resetAllData()">
+            <span>🔄</span>
+            <span>重置模拟数据</span>
+            <span class="arrow">›</span>
+          </div>
+        </div>
+        <div class="version-info">
+          <span>鲜达社区 v1.0.0</span>
+        </div>
+      </div>
+
+      <div class="page page-product-detail" id="pageProductDetail">
+        <div class="nav-bar nav-bar-transparent">
+          <div class="nav-back" onclick="goBack()">‹</div>
+          <div class="nav-title">商品详情</div>
+          <div class="nav-placeholder"></div>
+        </div>
+        <div class="product-detail-content" id="productDetailContent">
+        </div>
+        <div class="product-detail-footer">
+          <div class="detail-cart" onclick="switchTab('cart')">
+            <span>🛒</span>
+            <span class="cart-badge" id="detailCartBadge" style="display:none;">0</span>
+          </div>
+          <button class="btn-add-cart" onclick="addCurrentToCart()">加入购物车</button>
+          <button class="btn-buy-now" onclick="buyNow()">立即购买</button>
+        </div>
+      </div>
+
+      <div class="page page-checkout" id="pageCheckout">
+        <div class="nav-bar">
+          <div class="nav-back" onclick="goBack()">‹</div>
+          <div class="nav-title">确认订单</div>
+          <div class="nav-placeholder"></div>
+        </div>
+        <div class="checkout-content" id="checkoutContent">
+        </div>
+        <div class="checkout-footer">
+          <div class="checkout-total">
+            <span>实付：</span>
+            <span class="total-price" id="checkoutTotal">¥0.00</span>
+          </div>
+          <button class="btn-submit-order" onclick="submitOrder()">提交订单</button>
+        </div>
+      </div>
+
+      <div class="page page-payment" id="pagePayment">
+        <div class="nav-bar">
+          <div class="nav-back" onclick="goBack()">‹</div>
+          <div class="nav-title">收银台</div>
+          <div class="nav-placeholder"></div>
+        </div>
+        <div class="payment-content">
+          <div class="payment-amount">
+            <div class="amount-label">支付金额</div>
+            <div class="amount-value" id="paymentAmount">¥0.00</div>
+          </div>
+          <div class="payment-methods">
+            <div class="payment-method active">
+              <span class="method-icon">💚</span>
+              <span class="method-name">微信支付</span>
+              <span class="method-check">✓</span>
+            </div>
+          </div>
+          <div class="payment-tips">
+            <div class="tip-item">支付成功后，商品将进入备货流程</div>
+            <div class="tip-item">请在24小时内到自提点取货</div>
+          </div>
+          <button class="btn-pay" onclick="confirmPay()">确认支付</button>
+          <button class="btn-pay-fail" onclick="simulatePayFail()">模拟支付失败</button>
+        </div>
+      </div>
+
+      <div class="page page-pickup" id="pagePickup">
+        <div class="nav-bar">
+          <div class="nav-back" onclick="goBack()">‹</div>
+          <div class="nav-title">提货码</div>
+          <div class="nav-placeholder"></div>
+        </div>
+        <div class="pickup-content" id="pickupContent">
+        </div>
+      </div>
+
+      <div class="page page-order-detail" id="pageOrderDetail">
+        <div class="nav-bar">
+          <div class="nav-back" onclick="goBack()">‹</div>
+          <div class="nav-title">订单详情</div>
+          <div class="nav-placeholder"></div>
+        </div>
+        <div class="order-detail-content" id="orderDetailContent">
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab-item active" data-tab="home" onclick="switchTab('home')">
+        <div class="tab-icon">🏠</div>
+        <div class="tab-label">首页</div>
+      </div>
+      <div class="tab-item" data-tab="cart" onclick="switchTab('cart')">
+        <div class="tab-icon">🛒</div>
+        <div class="tab-label">购物车</div>
+        <div class="tab-badge" id="tabCartBadge" style="display:none;">0</div>
+      </div>
+      <div class="tab-item" data-tab="orders" onclick="switchTab('orders')">
+        <div class="tab-icon">📋</div>
+        <div class="tab-label">订单</div>
+      </div>
+      <div class="tab-item" data-tab="profile" onclick="switchTab('profile')">
+        <div class="tab-icon">👤</div>
+        <div class="tab-label">我的</div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script src="../shared/data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

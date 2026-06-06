@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鲜达社区 - 数据统计后台</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="stats-layout">
+    <header class="top-header">
+      <div class="header-left">
+        <span class="logo">📊</span>
+        <h1 class="title">鲜达社区 · 数据中心</h1>
+      </div>
+      <div class="header-right">
+        <span class="update-time">数据更新：<span id="updateTime">--</span></span>
+        <button class="btn-refresh" onclick="refreshData()">🔄 刷新数据</button>
+        <button class="btn-reset" onclick="resetAllData()">重置模拟数据</button>
+      </div>
+    </header>
+
+    <main class="stats-content">
+      <div class="stats-row">
+        <div class="stat-card stat-primary">
+          <div class="stat-icon">💰</div>
+          <div class="stat-content">
+            <div class="stat-label">总销售额</div>
+            <div class="stat-value" id="totalSales">¥0</div>
+            <div class="stat-sub">今日 <span id="todaySales" class="highlight">¥0</span></div>
+          </div>
+        </div>
+        <div class="stat-card stat-success">
+          <div class="stat-icon">📦</div>
+          <div class="stat-content">
+            <div class="stat-label">总订单数</div>
+            <div class="stat-value" id="totalOrders">0</div>
+            <div class="stat-sub">今日 <span id="todayOrders" class="highlight">0</span> 单</div>
+          </div>
+        </div>
+        <div class="stat-card stat-warning">
+          <div class="stat-icon">🔒</div>
+          <div class="stat-content">
+            <div class="stat-label">锁单中</div>
+            <div class="stat-value" id="lockCount">0</div>
+            <div class="stat-sub">已支付待备货</div>
+          </div>
+        </div>
+        <div class="stat-card stat-info">
+          <div class="stat-icon">✅</div>
+          <div class="stat-content">
+            <div class="stat-label">自提率</div>
+            <div class="stat-value" id="pickupRate">0%</div>
+            <div class="stat-sub">已完成 <span id="pickedCount" class="highlight">0</span> 单</div>
+          </div>
+        </div>
+        <div class="stat-card stat-danger">
+          <div class="stat-icon">⚠️</div>
+          <div class="stat-content">
+            <div class="stat-label">异常订单</div>
+            <div class="stat-value" id="anomalyCount">0</div>
+            <div class="stat-sub">需关注处理</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="chart-card large">
+          <div class="card-header">
+            <h3>订单趋势</h3>
+            <div class="card-actions">
+              <span class="legend">
+                <span class="legend-dot" style="background:#1890ff;"></span>
+                <span>订单数</span>
+              </span>
+              <span class="legend">
+                <span class="legend-dot" style="background:#52c41a;"></span>
+                <span>销售额</span>
+              </span>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div class="bar-chart" id="orderTrendChart">
+            </div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="card-header">
+            <h3>订单状态分布</h3>
+          </div>
+          <div class="chart-container">
+            <div class="status-chart" id="statusChart">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="chart-card">
+          <div class="card-header">
+            <h3>商品销量排行</h3>
+          </div>
+          <div class="chart-container">
+            <div class="ranking-list" id="topProductsList">
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="card-header">
+            <h3>履约分析</h3>
+          </div>
+          <div class="chart-container">
+            <div class="fulfillment-stats">
+              <div class="fulfillment-item">
+                <div class="fulfillment-circle" style="--percent: 85;">
+                  <span id="fulfillmentRate">0%</span>
+                </div>
+                <div class="fulfillment-label">履约率</div>
+              </div>
+              <div class="fulfillment-detail">
+                <div class="detail-row">
+                  <span class="detail-label">待备货</span>
+                  <span class="detail-value" id="fulfillPending">0</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">备货中</span>
+                  <span class="detail-value" id="fulfillPreparing">0</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">待自提</span>
+                  <span class="detail-value" id="fulfillWaiting">0</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">已完成</span>
+                  <span class="detail-value" id="fulfillDone">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="card-header">
+            <h3>异常订单</h3>
+          </div>
+          <div class="chart-container">
+            <div class="anomaly-stats">
+              <div class="anomaly-item expired">
+                <div class="anomaly-icon">⏰</div>
+                <div class="anomaly-info">
+                  <div class="anomaly-count" id="expiredCount">0</div>
+                  <div class="anomaly-label">过期未提</div>
+                </div>
+              </div>
+              <div class="anomaly-item failed">
+                <div class="anomaly-icon">💔</div>
+                <div class="anomaly-info">
+                  <div class="anomaly-count" id="failedCount">0</div>
+                  <div class="anomaly-label">支付失败</div>
+                </div>
+              </div>
+              <div class="anomaly-item cancelled">
+                <div class="anomaly-icon">❌</div>
+                <div class="anomaly-info">
+                  <div class="anomaly-count" id="cancelledCount">0</div>
+                  <div class="anomaly-label">已取消</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="chart-card full">
+          <div class="card-header">
+            <h3>异常订单详情</h3>
+            <div class="card-actions">
+              <select class="filter-select" id="anomalyFilter" onchange="renderAnomalyTable()">
+                <option value="all">全部异常</option>
+                <option value="expired">过期未提</option>
+                <option value="failed">支付失败</option>
+                <option value="cancelled">已取消</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>订单号</th>
+                  <th>用户</th>
+                  <th>商品</th>
+                  <th>金额</th>
+                  <th>类型</th>
+                  <th>异常类型</th>
+                  <th>时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="anomalyTableBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="chart-card full">
+          <div class="card-header">
+            <h3>库存预警</h3>
+          </div>
+          <div class="stock-warnings" id="stockWarnings">
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="../shared/data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

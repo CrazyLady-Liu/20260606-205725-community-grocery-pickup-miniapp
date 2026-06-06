@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鲜达社区 - 商家管理后台</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="logo">
+        <span class="logo-icon">🥬</span>
+        <span class="logo-text">鲜达商家</span>
+      </div>
+      <nav class="nav-menu">
+        <div class="nav-item active" data-menu="dashboard" onclick="switchMenu('dashboard')">
+          <span class="nav-icon">📊</span>
+          <span>订单汇总</span>
+        </div>
+        <div class="nav-item" data-menu="purchase" onclick="switchMenu('purchase')">
+          <span class="nav-icon">📋</span>
+          <span>采购清单</span>
+        </div>
+        <div class="nav-item" data-menu="sorting" onclick="switchMenu('sorting')">
+          <span class="nav-icon">📦</span>
+          <span>分拣打包</span>
+        </div>
+        <div class="nav-item" data-menu="pickup" onclick="switchMenu('pickup')">
+          <span class="nav-icon">✅</span>
+          <span>自提核销</span>
+        </div>
+        <div class="nav-item" data-menu="products" onclick="switchMenu('products')">
+          <span class="nav-icon">🥗</span>
+          <span>商品管理</span>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-reset" onclick="resetAllData()">🔄 重置数据</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-bar">
+        <div class="page-title" id="pageTitle">订单汇总</div>
+        <div class="user-info">
+          <span class="user-avatar">👨‍💼</span>
+          <span>商家管理员</span>
+        </div>
+      </header>
+
+      <div class="content-area">
+        <div class="page page-dashboard active" id="pageDashboard">
+          <div class="stats-cards">
+            <div class="stat-card">
+              <div class="stat-icon blue">📝</div>
+              <div class="stat-info">
+                <div class="stat-value" id="statTodayOrders">0</div>
+                <div class="stat-label">今日订单</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon green">💰</div>
+              <div class="stat-info">
+                <div class="stat-value" id="statTodaySales">¥0</div>
+                <div class="stat-label">今日销售额</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon orange">⏳</div>
+              <div class="stat-info">
+                <div class="stat-value" id="statPending">0</div>
+                <div class="stat-label">待处理</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon purple">📦</div>
+              <div class="stat-info">
+                <div class="stat-value" id="statPacked">0</div>
+                <div class="stat-label">待自提</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-header">
+              <h3>订单状态分布</h3>
+            </div>
+            <div class="status-overview">
+              <div class="status-item">
+                <div class="status-dot" style="background: #ff9500;"></div>
+                <span>待支付</span>
+                <span class="status-count" id="countPendingPayment">0</span>
+              </div>
+              <div class="status-item">
+                <div class="status-dot" style="background: #007aff;"></div>
+                <span>已支付</span>
+                <span class="status-count" id="countPaid">0</span>
+              </div>
+              <div class="status-item">
+                <div class="status-dot" style="background: #5856d6;"></div>
+                <span>采购中</span>
+                <span class="status-count" id="countPurchasing">0</span>
+              </div>
+              <div class="status-item">
+                <div class="status-dot" style="background: #af52de;"></div>
+                <span>分拣中</span>
+                <span class="status-count" id="countSorting">0</span>
+              </div>
+              <div class="status-item">
+                <div class="status-dot" style="background: #34c759;"></div>
+                <span>待自提</span>
+                <span class="status-count" id="countPacked">0</span>
+              </div>
+              <div class="status-item">
+                <div class="status-dot" style="background: #8e8e93;"></div>
+                <span>已完成</span>
+                <span class="status-count" id="countCompleted">0</span>
+              </div>
+              <div class="status-item">
+                <div class="status-dot" style="background: #ff3b30;"></div>
+                <span>异常</span>
+                <span class="status-count" id="countAnomaly">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-header">
+              <h3>最新订单</h3>
+              <select class="filter-select" id="orderFilter" onchange="renderOrderList()">
+                <option value="all">全部订单</option>
+                <option value="paid">已支付</option>
+                <option value="purchasing">采购中</option>
+                <option value="sorting">分拣中</option>
+                <option value="packed">待自提</option>
+                <option value="completed">已完成</option>
+              </select>
+            </div>
+            <div class="order-table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>订单号</th>
+                    <th>用户</th>
+                    <th>商品</th>
+                    <th>金额</th>
+                    <th>类型</th>
+                    <th>状态</th>
+                    <th>时间</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="orderTableBody">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="page page-purchase" id="pagePurchase">
+          <div class="section-card">
+            <div class="section-header">
+              <h3>采购汇总清单</h3>
+              <div>
+                <button class="btn-secondary" onclick="refreshPurchaseList()">🔄 刷新</button>
+                <button class="btn-primary" onclick="exportPurchaseList()">📥 导出清单</button>
+              </div>
+            </div>
+            <div class="purchase-summary">
+              <div class="summary-item">
+                <span class="summary-label">待采购商品</span>
+                <span class="summary-value" id="purchaseProductCount">0 种</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">关联订单</span>
+                <span class="summary-value" id="purchaseOrderCount">0 单</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">采购总金额</span>
+                <span class="summary-value" id="purchaseTotalAmount">¥0</span>
+              </div>
+            </div>
+            <div class="purchase-list" id="purchaseList">
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-header">
+              <h3>按订单分组</h3>
+            </div>
+            <div class="order-groups" id="orderGroups">
+            </div>
+          </div>
+        </div>
+
+        <div class="page page-sorting" id="pageSorting">
+          <div class="section-card">
+            <div class="section-header">
+              <h3>待分拣订单</h3>
+              <span class="badge" id="sortingBadge">0 单</span>
+            </div>
+            <div class="sorting-orders" id="sortingOrders">
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-header">
+              <h3>今日打包记录</h3>
+            </div>
+            <div class="packed-records" id="packedRecords">
+            </div>
+          </div>
+        </div>
+
+        <div class="page page-pickup" id="pagePickup">
+          <div class="section-card">
+            <div class="section-header">
+              <h3>提货码核销</h3>
+            </div>
+            <div class="verify-section">
+              <div class="verify-input-group">
+                <input type="text" id="pickupCodeInput" placeholder="请输入或扫描提货码" maxlength="10">
+                <button class="btn-primary btn-large" onclick="verifyPickupCode()">核销</button>
+              </div>
+              <div class="quick-codes">
+                <span>快速选择：</span>
+                <div id="quickCodes" class="quick-code-list">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-header">
+              <h3>待自提订单</h3>
+              <span class="badge green" id="pickupPendingBadge">0 单</span>
+            </div>
+            <div class="pickup-orders" id="pickupOrders">
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-header">
+              <h3>今日核销记录</h3>
+            </div>
+            <div class="verification-records" id="verificationRecords">
+            </div>
+          </div>
+        </div>
+
+        <div class="page page-products" id="pageProducts">
+          <div class="section-card">
+            <div class="section-header">
+              <h3>商品列表</h3>
+              <button class="btn-primary" onclick="addProduct()">+ 新增商品</button>
+            </div>
+            <div class="product-grid" id="productGrid">
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal" id="verifyModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="verifyModalTitle">核销结果</h3>
+        <span class="modal-close" onclick="closeModal('verifyModal')">&times;</span>
+      </div>
+      <div class="modal-body" id="verifyModalBody">
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary" onclick="closeModal('verifyModal')">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="../shared/data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
